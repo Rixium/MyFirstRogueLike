@@ -2,20 +2,28 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MyFirstRogueLike.Screens;
 
 namespace MyFirstRogueLike
 {
     public class Game1 : Game
     {
+
+        public static int ScreenWidth = 1280;
+        public static int ScreenHeight = 720;
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
         private Texture2D _splashImage;
         private SoundEffect _soundEffect;
 
+        private IScreen _screen;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+
             Content.RootDirectory = "Content";
 
             IsMouseVisible = true;
@@ -23,6 +31,10 @@ namespace MyFirstRogueLike
 
         protected override void Initialize()
         {
+            _graphics.PreferredBackBufferWidth = ScreenWidth;
+            _graphics.PreferredBackBufferHeight = ScreenHeight;
+            _graphics.ApplyChanges();
+
             base.Initialize();
         }
 
@@ -34,6 +46,8 @@ namespace MyFirstRogueLike
             _soundEffect = Content.Load<SoundEffect>("splashSound");
 
             _soundEffect.Play();
+
+            _screen = new SplashScreen(_splashImage);
         }
 
         protected override void Update(GameTime gameTime)
@@ -41,7 +55,8 @@ namespace MyFirstRogueLike
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            var delta = (float) (gameTime.ElapsedGameTime.TotalMilliseconds / 1000f);
+            _screen.Update(delta);
 
             base.Update(gameTime);
         }
@@ -50,15 +65,7 @@ namespace MyFirstRogueLike
         {
             GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin();
-
-            _spriteBatch.Draw(
-                _splashImage,
-                new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight),
-                Color.White
-            );
-
-            _spriteBatch.End();
+            _screen.Draw(_spriteBatch);
 
             base.Draw(gameTime);
         }
