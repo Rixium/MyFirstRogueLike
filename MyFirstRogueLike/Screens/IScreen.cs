@@ -2,7 +2,7 @@
 
 namespace MyFirstRogueLike.Screens
 {
-    interface IScreen
+    public interface IScreen
     {
         void Update(float delta);
         void Draw(SpriteBatch spriteBatch);

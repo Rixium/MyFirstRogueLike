@@ -2,7 +2,9 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MyFirstRogueLike.Managers;
 using MyFirstRogueLike.Screens;
+using System;
 
 namespace MyFirstRogueLike
 {
@@ -14,11 +16,7 @@ namespace MyFirstRogueLike
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
-        private Texture2D _splashImage;
-        private SoundEffect _soundEffect;
-
-        private IScreen _screen;
+        private ScreenManager _screenManager;
 
         public Game1()
         {
@@ -35,6 +33,8 @@ namespace MyFirstRogueLike
             _graphics.PreferredBackBufferHeight = ScreenHeight;
             _graphics.ApplyChanges();
 
+            _screenManager = new ScreenManager();
+
             base.Initialize();
         }
 
@@ -42,12 +42,13 @@ namespace MyFirstRogueLike
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _splashImage = Content.Load<Texture2D>("splashImage");
-            _soundEffect = Content.Load<SoundEffect>("splashSound");
+            var splashImage = Content.Load<Texture2D>("splashImage");
+            var soundEffect = Content.Load<SoundEffect>("splashSound");
 
-            _soundEffect.Play();
+            soundEffect.Play();
 
-            _screen = new SplashScreen(_splashImage);
+            _screenManager.SetScreen(new SplashScreen(splashImage));
+            _screenManager.SwitchToNextScreen();
         }
 
         protected override void Update(GameTime gameTime)
@@ -56,7 +57,7 @@ namespace MyFirstRogueLike
                 Exit();
 
             var delta = (float) (gameTime.ElapsedGameTime.TotalMilliseconds / 1000f);
-            _screen.Update(delta);
+            _screenManager.Update(delta);
 
             base.Update(gameTime);
         }
@@ -65,7 +66,7 @@ namespace MyFirstRogueLike
         {
             GraphicsDevice.Clear(Color.Black);
 
-            _screen.Draw(_spriteBatch);
+            _screenManager.Draw(_spriteBatch);
 
             base.Draw(gameTime);
         }
