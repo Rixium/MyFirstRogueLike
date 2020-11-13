@@ -1,18 +1,31 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using MyFirstRogueLike.Screens;
-using System;
+using System.Collections.Generic;
 
 namespace MyFirstRogueLike.Managers
 {
     public class ScreenManager
     {
+        private IReadOnlyCollection<IScreen> _screens;
 
         private IScreen _activeScreen;
         private IScreen _nextScreen;
 
-        public void SetScreen(IScreen screen)
+        public ScreenManager(IReadOnlyCollection<IScreen> screens)
         {
-            _nextScreen = screen;
+            _screens = screens;
+        }
+
+        public void SetScreen(ScreenType screenType)
+        {
+            foreach (var screen in _screens)
+            {
+                if (screen.ScreenType == screenType)
+                {
+                    _nextScreen = screen;
+                    return;
+                }
+            }
         }
 
         public void SwitchToNextScreen()

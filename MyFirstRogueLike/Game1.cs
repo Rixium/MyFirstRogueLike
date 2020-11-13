@@ -33,8 +33,6 @@ namespace MyFirstRogueLike
             _graphics.PreferredBackBufferHeight = ScreenHeight;
             _graphics.ApplyChanges();
 
-            _screenManager = new ScreenManager();
-
             base.Initialize();
         }
 
@@ -47,7 +45,11 @@ namespace MyFirstRogueLike
 
             soundEffect.Play();
 
-            _screenManager.SetScreen(new SplashScreen(splashImage));
+            _screenManager = new ScreenManager(new IScreen[] {
+                new SplashScreen(splashImage)
+            });
+
+            _screenManager.SetScreen(ScreenType.Splash);
             _screenManager.SwitchToNextScreen();
         }
 

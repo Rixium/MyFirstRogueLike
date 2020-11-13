@@ -14,6 +14,8 @@ namespace MyFirstRogueLike.Screens
             _splashImage = splashImage;
         }
 
+        public ScreenType ScreenType => ScreenType.Splash;
+
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
